@@ -4,7 +4,7 @@
 
 <!-- What is your research question? -->
 
-TODO
+Is there any correlation between change in demographics and residential trends in communities versus changes in air quality in the United States, and if so, what are some likely predictors for air pollutant changes?
 
 ### 📦 Data
 
