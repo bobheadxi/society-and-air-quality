@@ -26,4 +26,10 @@ We'll primarily leverage two datasets for our research:
 
 <!-- What methods will you use? Why it is suitable for this dataset and question? -->
 
-TODO
+1. We need to organize our two main datasets so that they align:
+    1. group observations from both the EPA and ACS datasets by location and organize them into matching regions (~500)
+    2. for each region, collect observations where the EPA and ACS datasets match in time
+2. We want to explore relationships between demographic trends and their relationship to air quality, so we hope to try a few things:
+    1. For each region, perform CCA to identify significant modes in the EPA and ACS datasets across 11 years of overlapping data. Then we want to compare all the regions and determine whether these modes align and predict correlations. We might want to use  stepwise regression to find other significant predictors since there are more features to consider.
+    2. Treat each observation as an individual observation (rather than treating regions as a unit) and perform feature selection and kNN clustering (or other clustering methods) to try and find relationships between demographic data and air quality
+3. For each of the above methods, we’ll need to find a reasonable way to generate test data and training data splits - we could do it by region, but we’ll probably want to pick geographically evenly distributed regions, or try cross-validation with different regions, based on what methods we use.
