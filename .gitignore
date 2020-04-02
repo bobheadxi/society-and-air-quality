@@ -1,5 +1,5 @@
 # Output stuff
-_data/*
+_data/tmp/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
