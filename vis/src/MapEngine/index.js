@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Intro() {
+function MapEngine() {
   return (
     <div>
       <h1>TODO</h1>
@@ -8,4 +8,4 @@ function Intro() {
   );
 }
 
-export default Intro;
+export default MapEngine;

@@ -1,0 +1,6 @@
+.ant-carousel .slick-dots li.slick-active button {
+    background: #fff !important;
+}
+.ant-carousel .slick-dots li button {
+    background: gray !important;
+}
