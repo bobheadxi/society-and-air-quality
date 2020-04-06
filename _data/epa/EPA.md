@@ -16,3 +16,15 @@ Acceptable PM2.5 AQI & Speciation Mass 	88502 	7 	24 HOUR 	UNHEALTHY FOR SENSITI
 Acceptable PM2.5 AQI & Speciation Mass 	88502 	X 	24-HR BLK AVG 	UNHEALTHY FOR SENSITIVE 	101 	150 	35.5 	55.4
 Acceptable PM2.5 AQI & Speciation Mass 	88502 	7 	24 HOUR 	VERY UNHEALTHY 	201 	300 	150.5 	250.4
 Acceptable PM2.5 AQI & Speciation Mass 	88502 	X 	24-HR BLK AVG 	VERY UNHEALTHY 	201 	300 	150.5 	250.4
+
+## Combined ID
+
+This is tracked as `combined_id` in the `_/data/epa` data.
+
+```
+[geoid]       [state] [county] [site] [parameter]
+ 13820  .epa.   01   .  073   . 1010 .   68105
+```
+
+* `geoid`: ACS CBSA region identifier
+* `parameter`: Acceptable PM2.5 AQI & Speciation Mass (88502) or Average Ambient Temperature (68105)
