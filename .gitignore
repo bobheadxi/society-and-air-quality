@@ -1,5 +1,5 @@
 # Output stuff
-_data/tmp/*
+docs/_data/tmp/*
 
 # Credentials
 google_app_credentials.json
