@@ -2,7 +2,7 @@
 
 Notebooks used during the exploration part of this project are tracked here. They should generate
 the data used in the final presentation when executed in order under `../_data`, with intermediary
-files being stored in the untracked `../_data/tmp`.
+files being stored in the untracked `../docs/_datatmp`.
 
 This document outlines what's going on here.
 
@@ -55,12 +55,12 @@ bq = bigquery.Client()
 
 ### Generated Data
 
-The first 4 notebooks pull from BigQuery and other sources, and dumps intermediary data in `_data/tmp/`.
+The first 4 notebooks pull from BigQuery and other sources, and dumps intermediary data in `docs/_data/tmp/`.
 This data is not persisted.
 
 ### Persisted Data
 
-Persisted data is tracked in `_data/`, outside of `_data/tmp/`. Refer to each subdirectory's `README.md`
+Persisted data is tracked in `docs/_data/`, outside of `_data/tmp/`. Refer to each subdirectory's `README.md`
 for more details.
 
 ## Notebooks
