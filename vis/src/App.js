@@ -4,6 +4,11 @@ import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 
 import './App.css';
 
+// contexts for data
+import ACSContext from './contexts/ACSContext';
+import EPAContext from './contexts/EPAContext';
+import SingleLoader from './contexts/SingleLoader';
+
 // slideshow components
 import Intro from './slides/Intro';
 import Questions from './slides/Questions';
@@ -11,20 +16,21 @@ import MethodologyData from './slides/methodology/Data';
 import MethodologyProcessing from './slides/methodology/Processing';
 import MethodologyAnalysis from './slides/methodology/Analysis';
 
-const slides = [
-  Intro,
-  Questions,
-  MethodologyData,
-  MethodologyProcessing,
-  MethodologyAnalysis,
-]
-
 const { Text } = Typography; 
 
 function App() {
   const [slideID, setSlide] = useState(0);
   const slider = useRef();
-  return (
+
+  const slides = [
+    Intro,
+    Questions,
+    MethodologyData,
+    MethodologyProcessing,
+    MethodologyAnalysis,
+  ]
+
+  const main = (
     <Layout style={{minHeight:"100vh"}}>
       <Layout.Content>
         <Carousel
@@ -56,6 +62,14 @@ function App() {
         </Row>
       </Layout.Footer>
     </Layout>
+  )
+
+  return (
+    <SingleLoader name="context.acs" context={ACSContext}>
+      <SingleLoader name="context.epa" context={EPAContext}>
+        {main}
+      </SingleLoader>
+    </SingleLoader>
   );
 }
 

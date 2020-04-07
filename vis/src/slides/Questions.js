@@ -24,6 +24,4 @@ function Slide() {
   );
 }
 
-Slide.footerText = 'Robert Lin and Angelene Leow';
-
 export default Slide;

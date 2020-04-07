@@ -2,7 +2,7 @@ const { override, fixBabelImports, addLessLoader } = require('customize-cra');
 const darkTheme = require('antd/dist/dark-theme');
 // const compactTheme = require('antd/dist/compact-theme');
 
-module.exports = override(
+const baseOverrides = [
     fixBabelImports('import', {
         libraryName: 'antd',
         libraryDirectory: 'es',
@@ -15,4 +15,6 @@ module.exports = override(
             ...darkTheme,
         },
     }),
-);
+];
+
+module.exports = override(baseOverrides);
