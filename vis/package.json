@@ -2,6 +2,7 @@
   "name": "vis",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://bobheadxi.dev/eosc410-project",
   "dependencies": {
     "@ant-design/icons": "^4.0.5",
     "@antv/g2": "^4.0.4",
