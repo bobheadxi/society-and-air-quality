@@ -20,9 +20,9 @@ import End from './slides/End';
 // map
 // import Map from './maps/Map';
 import DeckGL from '@deck.gl/react';
-import { FlyToInterpolator } from '@deck.gl/core';
+import { LinearInterpolator } from '@deck.gl/core';
 import { StaticMap } from 'react-map-gl';
-import { MAPBOX_API_TOKEN, INITIAL_VIEW_STATE } from './vars';
+import { MAPBOX_API_TOKEN, VIEW_STATES } from './vars';
 
 const mapStyles = {
   MAPBOX_DARK: 'mapbox://styles/mapbox/dark-v9',
@@ -45,7 +45,7 @@ function App() {
   const [mapState, setMapState] = useState({
     prevUpdateID: -1,
 
-    viewState: INITIAL_VIEW_STATE,
+    viewState: VIEW_STATES.INITAL,
     layers: [],
 
     mapStyle: 'DARK',
@@ -67,8 +67,8 @@ function App() {
             ...mapState.viewState,
             ...s.viewState,
             // why won't this work :(
-            transitionDuration: 3000,
-            transitionInterpolator: new FlyToInterpolator(),
+            transitionDuration: 1000,
+            transitionInterpolator: new LinearInterpolator(['bearing']),
           },
         });
       }
@@ -79,7 +79,6 @@ function App() {
     <Layout style={{minHeight:"100vh"}}>
       <Layout.Content>
         <DeckGL
-          initialViewState={INITIAL_VIEW_STATE}
           viewState={mapState.viewState}
           layers={mapState.layers}>
           <StaticMap
