@@ -1,24 +1,21 @@
 import React from 'react';
-import { Card, Row, Col, Typography, Avatar } from 'antd';
+import { Card, Row, Col, Typography, Avatar, Space } from 'antd';
 import { ExperimentTwoTone } from '@ant-design/icons';
 
 import SlideLayout from '../components/SlideLayout';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 function Slide() {
   return (
     <SlideLayout>
-      <Row gutter={16}>
-        <Col span={8} offset={16}>
-          <Card>
-            <Card.Meta title="Society and Air" description="EOSC410 Final Project" avatar={<Avatar size={64} icon={<ExperimentTwoTone />}/>} />
-            <Text>
-              Hello world!
-            </Text>
-          </Card>
-        </Col>
-      </Row>
+      <Space direction="vertical" size="large" style={{ padding: '48px' }}>
+        <Avatar size="large" icon={<ExperimentTwoTone />} /> 
+        <Typography align="center">
+          <Title>Society and Air Quality</Title>
+          <Text>EOSC 410 Final Project</Text> | <Text type="secondary">University of British Columbia, April 2020</Text>
+        </Typography>
+      </Space>
     </SlideLayout>
   );
 }
