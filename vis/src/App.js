@@ -71,23 +71,26 @@ function App() {
       </Layout.Content>
 
       <Layout.Footer>      
-        <Row justify="space-between">
-          <Col span={8}>
+        <Row justify="space-between" type="flex" align="middle">
+          <Col span={4}>
             {slideID > 0
               ? <Button type="primary" shape="round" icon={<ArrowLeftOutlined />} size="large"
                   onClick={() => { slider.current.prev() }}/>
               : undefined}
           </Col>
-          <Col>
-            <Text type="secondary">
+          <Col span={8} style={{
+            display: "flex",
+            alignItems: "center",
+            verticalAlign: "middle",
+            textAlign: "center"
+          }} offset={slideID > 0 ? 0 : 4}>
+            <Text type="secondary" style={{ verticalAlign: "middle", alignItems: "center", textAlign: "center" }}>
               {slides[slideID].footerText}
             </Text>
           </Col>
-          <Col span={8} >
-            {slideID < slides.length
-              ? <Button type="primary" shape="round" icon={<ArrowRightOutlined />} size="large" style={{ float: 'right' }}
-                  onClick={() => { slider.current.next() }}/>
-              : undefined}
+          <Col span={4} >
+            <Button type="primary" shape="round" icon={<ArrowRightOutlined />} size="large" style={{ float: 'right' }}
+              onClick={() => { slider.current.next() }}/>
           </Col>
         </Row>
       </Layout.Footer>

@@ -10,14 +10,20 @@ export default async function(url, opts = {
 }) {
   return new Promise((resolve, reject) => {
     Papa.parse(url, {
-      worker: true,
+      // worker: true,
       header: true,
-      step: opts.onStep,
+      quotes: false,
+      delimiter: ',',
+      download: true,
       error: (err) => {
         console.error(`fetchCsv: error on ${url}`, { err });
         reject(err.message);
       },
       complete: (res) => {
+        if (res.errors.length > 0) {
+          return reject(res.errors[0]);
+        }
+        console.log(res);
         resolve(res.data);
       },
     });
