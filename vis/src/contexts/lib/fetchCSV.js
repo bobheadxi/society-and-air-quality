@@ -1,5 +1,7 @@
 import Papa from 'papaparse';
 
+import resource from './resource';
+
 /**
  * Downloads given CSV file.
  * 
@@ -7,9 +9,10 @@ import Papa from 'papaparse';
  */
 export default async function(url, opts = {
   onStep: undefined,
+  notResource: false,
 }) {
   return new Promise((resolve, reject) => {
-    Papa.parse(url, {
+    Papa.parse(opts.notResource ? url : resource(url), {
       // worker: true,
       header: true,
       quotes: false,

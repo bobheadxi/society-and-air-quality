@@ -1,11 +1,15 @@
+import resource from './resource';
+
 /**
  * Downloads JSON asset
  * 
  * @param {string} url resource to fetch
  */
-export default async function(url) {
+export default async function(url, opts = {
+    notResource: false,
+}) {
     try {
-        const resp = await fetch(url, {
+        const resp = await fetch(opts.notResource ? url : resource(url), {
             method: 'GET',
             mode: 'no-cors',
         });
