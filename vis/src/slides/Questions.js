@@ -34,7 +34,8 @@ function QuestionsSlide({ updateMapState, isSlideSelected }) {
                 getLineColor: [255, 255, 255],
                 getElevation: (d) => {
                   const { properties: { geoid } } = d;
-                  return Math.sqrt(timeseriesFlat[timeseriesFlat.length-1][`${geoid}.acs.total_pop`]) * 100;
+                  const pop = timeseriesFlat[timeseriesFlat.length-1][`${geoid}.acs.total_pop`] || 0;
+                  return Math.sqrt(pop) * 100;
                 },
                 opacity: 0.8,
                 stroked: false,

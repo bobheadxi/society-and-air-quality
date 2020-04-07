@@ -9,9 +9,6 @@ import ACSContext from './contexts/ACSContext';
 import EPAContext from './contexts/EPAContext';
 import SingleLoader from './contexts/SingleLoader';
 
-// map
-import Map from './maps/Map';
-
 // slideshow components
 import Intro from './slides/Intro';
 import Questions from './slides/Questions';
@@ -20,6 +17,27 @@ import MethodologyProcessing from './slides/methodology/Processing';
 import MethodologyAnalysis from './slides/methodology/Analysis';
 import End from './slides/End';
 
+// map
+// import Map from './maps/Map';
+import DeckGL from '@deck.gl/react';
+import { FlyToInterpolator } from '@deck.gl/core';
+import { StaticMap } from 'react-map-gl';
+import { MAPBOX_API_TOKEN, INITIAL_VIEW_STATE } from './vars';
+
+const mapStyles = {
+  MAPBOX_DARK: 'mapbox://styles/mapbox/dark-v9',
+  DARK: 'mapbox://styles/bobhead/ck8pf7npv0cda1iobxo3txanr',
+};
+
+const slides = [
+  Intro,
+  Questions,
+  MethodologyData,
+  MethodologyProcessing,
+  MethodologyAnalysis,
+  End,
+];
+
 const { Text } = Typography; 
 
 function App() {
@@ -27,50 +45,64 @@ function App() {
   const [mapState, setMapState] = useState({
     prevUpdateID: -1,
 
-    viewState: Map.initialViewState,
+    viewState: INITIAL_VIEW_STATE,
     layers: [],
 
     mapStyle: 'DARK',
-    hideMapLayer: false,
   });
 
   // slides
   const [slideID, setSlide] = useState(0);
   const slider = useRef();
-  const slides = [
-    Intro,
-    Questions,
-    MethodologyData,
-    MethodologyProcessing,
-    MethodologyAnalysis,
-    End,
-  ];
   const carouselNodes = slides.map((S, id) => <S
     slideID={id}
     isSlideSelected={id === slideID}
     updateMapState={(s, updateID) => {
       const stateUpdateID = (updateID | id);
       if (stateUpdateID !== mapState.prevUpdateID) {
-        setMapState({ prevUpdateID: stateUpdateID, ...s });
+        setMapState({
+          prevUpdateID: stateUpdateID,
+          layers: s.layers,
+          viewState: {
+            ...mapState.viewState,
+            ...s.viewState,
+            // why won't this work :(
+            transitionDuration: 3000,
+            transitionInterpolator: new FlyToInterpolator(),
+          },
+        });
       }
     }}
   />)
 
-  // the entire app pretty much
-  const main = (
+  return (
     <Layout style={{minHeight:"100vh"}}>
       <Layout.Content>
-        <Map {...mapState}>
-          <Carousel
-            ref={ref => { slider.current = ref; }}
-            style={{minHeight:"100vh"}}
-            dotPosition="top"
-            beforeChange={(_, to) => { setSlide(to); }}
-            children={carouselNodes} />
-        </Map>
+        <DeckGL
+          initialViewState={INITIAL_VIEW_STATE}
+          viewState={mapState.viewState}
+          layers={mapState.layers}>
+          <StaticMap
+              viewState={mapState.viewState}
+              mapStyle={mapStyles.DARK}
+              reuseMaps
+              preventStyleDiffing
+              mapboxApiAccessToken={MAPBOX_API_TOKEN} />
+        </DeckGL>
+
+        <SingleLoader context={ACSContext}>
+            <SingleLoader context={EPAContext}>
+              <Carousel
+                ref={ref => { slider.current = ref; }}
+                style={{minHeight:"100%"}}
+                dotPosition="top"
+                beforeChange={(_, to) => { setSlide(to); }}
+                children={carouselNodes} />
+            </SingleLoader>
+          </SingleLoader>
       </Layout.Content>
 
-      <Layout.Footer>      
+      <Layout.Footer>
         <Row justify="space-between" type="flex" align="middle">
           <Col span={4}>
             {slideID > 0
@@ -95,14 +127,6 @@ function App() {
         </Row>
       </Layout.Footer>
     </Layout>
-  )
-
-  return (
-    <SingleLoader context={ACSContext}>
-      <SingleLoader context={EPAContext}>
-          {main}
-      </SingleLoader>
-    </SingleLoader>
   );
 }
 

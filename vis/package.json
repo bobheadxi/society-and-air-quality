@@ -23,7 +23,7 @@
   "scripts": {
     "data": "mkdir -p ./public/_data/epa/stations ; mkdir -p ./public/_data/acs ; cp -r ../docs/_data/epa/. ./public/_data/epa && cp -r ../docs/_data/acs/. ./public/_data/acs",
     "clean": "rm -rf ./public/_data",
-    "start": "react-app-rewired start",
+    "start": "PUBLIC_URL=/ react-app-rewired start",
     "prebuild": "npm run clean",
     "build": "react-app-rewired build && cp -r ./build/* ../docs",
     "postbuild": "npm run data"
