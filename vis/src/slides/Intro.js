@@ -1,9 +1,9 @@
 import React from 'react';
-import { Spin, Row, Col, Typography, Avatar, Space, Alert } from 'antd';
+import { Row, Col, Typography, Avatar, Space, Alert } from 'antd';
 import { ExperimentTwoTone } from '@ant-design/icons';
 import { GeoJsonLayer } from '@deck.gl/layers';
 
-import { stationGeoToColor } from '../vars';
+import { geoidToColor } from '../vars';
 import EPAContext from '../contexts/EPAContext';
 import ACSContext from '../contexts/ACSContext';
 
@@ -40,7 +40,10 @@ function IntroSlide({ updateMapState, isSlideSelected }) {
                       id: 'intro-epa-layer',
                       data: epa.stations[epa.stations.length-1],
                       pointRadiusMinPixels: 3,
-                      getFillColor: stationGeoToColor,
+                      getFillColor: (d) => {
+                        const { properties: { acs_geoid: geoid } } = d;
+                        return geoidToColor(geoid);
+                      },
                     }),
                   ],
                 });
@@ -50,11 +53,17 @@ function IntroSlide({ updateMapState, isSlideSelected }) {
                 <SlideLayout>
                   <Row>
                     <Col span={4} offset={20}>
-                    {isLoading ? <Alert message="Loading data..." type="info" icon={<div><Spin /></div>} /> : undefined}
-                    {isDataLoaded ? <Alert message={'Presentation data is ready!'} type="success" showIcon /> : undefined}
+                      <Space direction="vertical">
+                        {isLoading ? <Alert message="Loading data..." type="info" /> : undefined}
+                        {isDataLoaded ? <Alert message={'Presentation data is ready!'} type="success" showIcon /> : undefined}
 
-                    {(!isLoading && acs.err)? <Alert message={`Error occured when loading ACS data: ${acs.err.message}`} type="error" showIcon /> : undefined}
-                    {(!isLoading && epa.err)? <Alert message={`Error occured when loading ACS data: ${epa.err.message}`} type="error" showIcon /> : undefined}
+                        {(!isLoading && acs.err)
+                          ? <Alert message="Error occured when loading ACS data" description={acs.err.message} type="error" showIcon /> 
+                          : undefined}
+                        {(!isLoading && epa.err)
+                          ? <Alert message="Error occured when loading EPA data" description={epa.err.message} type="error" showIcon />
+                          : undefined}
+                      </Space>
                     </Col>
                   </Row>
                   {main}

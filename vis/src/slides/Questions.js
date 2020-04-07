@@ -1,55 +1,70 @@
 import React from 'react';
 import { Card, Row, Col, Typography, Avatar, Space } from 'antd';
 import { QuestionOutlined } from '@ant-design/icons';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, PolygonLayer } from '@deck.gl/layers';
 
-import { stationGeoToColor } from '../vars';
-import EPAContext from '../contexts/EPAContext';
+import { geoidToColor } from '../vars';
+
+import ACSContext from '../contexts/ACSContext';
+
 import SlideLayout from '../components/SlideLayout';
 
 const { Title, Text } = Typography;
 
 function QuestionsSlide({ updateMapState, isSlideSelected }) {
   return (
-    <EPAContext.Consumer>
-      {(epa) => {
-        if (isSlideSelected) {
+    <ACSContext.Consumer>
+      {(acs) => {
+        if (!acs.loading && !acs.err && isSlideSelected) {
+          const { timeseriesFlat, regions } = acs;
           updateMapState({
             viewState: {
               longitude: -98.5795,
               latitude: 41.8283,
-              zoom: 3,
-              pitch: 0,
-              bearing: 0
+              zoom: 3.5,
+              pitch: 45,
+              bearing: 15
             },
             layers: [
               new GeoJsonLayer({
-                id: 'intro-epa-layer',
-                data: epa.stations[epa.stations.length-1],
+                id: 'questions-acs-layer',
+                data: regions[regions.length-1],
                 pointRadiusMinPixels: 3,
-                getFillColor: stationGeoToColor,
+                getFillColor: (d) => geoidToColor(d.properties.geoid),
+                getLineColor: [255, 255, 255],
+                getElevation: (d) => {
+                  const { properties: { geoid } } = d;
+                  return Math.sqrt(timeseriesFlat[timeseriesFlat.length-1][`${geoid}.acs.total_pop`]) * 100;
+                },
+                opacity: 0.8,
+                stroked: false,
+                filled: true,
+                extruded: true,
+                wireframe: true,
               }),
             ]
           });
         }
         return (
           <SlideLayout>
-          <Row gutter={16}>
-            <Col span={8} offset={16}>
-              <Space direction="vertical">
-                  <Card title="Questions" bordered={false}>
-                    <Text>
-                      research questions, few sentences on the relevance of this study
-                    </Text>
-                  </Card>
-              </Space>
-            </Col>
-          </Row>
-        </SlideLayout>
+            <Row gutter={16}>
+              <Col span={8} offset={16}>
+                <Space direction="vertical">
+                    <Card title="Questions" bordered={false}>
+                      <Text>
+                        research questions, few sentences on the relevance of this study
+                      </Text>
+                    </Card>
+                </Space>
+              </Col>
+            </Row>
+          </SlideLayout>
         )
       }}
-    </EPAContext.Consumer>
+    </ACSContext.Consumer>
   );
 }
+
+QuestionsSlide.footerText = 'Simplified ACS CBSA regional boundaries, with heights representing total population'
 
 export default QuestionsSlide;

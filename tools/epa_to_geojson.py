@@ -2,8 +2,8 @@ import os, json
 import pandas as pd
 import geopandas as gp
 
-epa_to_acs_cbsa_dir = '_data/epa_to_acs_cbsa'
-epa_dir = '_data/epa/stations'
+epa_to_acs_cbsa_dir = 'docs/_data/epa_to_acs_cbsa'
+epa_dir = 'docs/_data/epa/stations'
 
 for filename in os.listdir(epa_to_acs_cbsa_dir):
     if not filename.endswith('.csv'): 
