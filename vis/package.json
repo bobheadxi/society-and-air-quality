@@ -15,6 +15,7 @@
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.1",
+    "react-map-gl": "^5.2.3",
     "react-scripts": "3.4.1"
   },
   "scripts": {
@@ -22,7 +23,7 @@
     "clean": "rm -rf ./public/_data",
     "start": "react-app-rewired start",
     "prebuild": "npm run clean",
-    "build": "react-app-rewired build && mv build docs",
+    "build": "react-app-rewired build && cp -r ./build/* ../docs",
     "postbuild": "npm run data"
   },
   "eslintConfig": {

@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 
-function SingleLoader({ name, children, context }) {
+function SingleLoader({ children, context }) {
   const [data, setData] = useState({ loading: true })
 
   useEffect(() => {
+    let cancel = false;
     async function loadFunc() {
-      console.log(`${name}: loading...`);
+      console.log(`${context.displayName}: loading...`);
       try {
         const data = await context.loadValue();
+        if (cancel) { return; }
         setData({ loading: false, ...data });
-        console.log(`${name}: ok, updated`);
+        console.log(`${context.displayName}: ok, updated`);
       } catch(err) {
-        console.log(`${name}: err, updated`);
+        console.log(`${context.displayName}: err, updated`);
         setData({ loading: false, err });
       }
     }
     loadFunc();
-  }, [name, context])
+
+    return () => { cancel = true; }
+  }, [context])
 
   return <context.Provider value={data} children={children}/>;
 }

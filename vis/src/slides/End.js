@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from 'antd';
 
-import SlideLayout from '../../components/SlideLayout';
+import SlideLayout from '../components/SlideLayout';
 
 const { Title } = Typography;
 

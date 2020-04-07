@@ -1,10 +1,10 @@
 import React from 'react';
 import { Layout } from 'antd';
 
-function SlideLayout({ children, contentStyle={} }) {
+function SlideLayout({ children }) {
   return (
-    <Layout style={{minHeight:"100%"}}>
-      <Layout.Content style={{padding:'48px', ...contentStyle}}>
+    <Layout style={{minHeight:"100%", background:'transparent'}}>
+      <Layout.Content style={{padding:'48px'}}>
         {children}
       </Layout.Content>
     </Layout>
