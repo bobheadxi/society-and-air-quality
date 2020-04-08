@@ -3,7 +3,7 @@ import { Row, Col, Typography, Avatar, Space, Alert } from 'antd';
 import { ExperimentTwoTone } from '@ant-design/icons';
 import { GeoJsonLayer } from '@deck.gl/layers';
 
-import { geoidToColor } from '../vars';
+import { geoidToColor, VIEW_STATES } from '../vars';
 import EPAContext from '../contexts/EPAContext';
 import ACSContext from '../contexts/ACSContext';
 
@@ -35,6 +35,7 @@ function IntroSlide({ updateMapState, isSlideSelected }) {
 
               if (isDataLoaded && isSlideSelected) {
                 updateMapState({
+                  viewState: VIEW_STATES.INITAL,
                   layers: [
                     new GeoJsonLayer({
                       id: 'intro-epa-layer',
