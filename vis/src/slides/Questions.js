@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Row, Col, Typography, Timeline, Space } from 'antd';
-import { FilterTwoTone, FundTwoTone, QuestionCircleTwoTone, QuestionCircleFilled } from '@ant-design/icons';
+import { FilterTwoTone, FundTwoTone, QuestionCircleFilled } from '@ant-design/icons';
 import { GeoJsonLayer } from '@deck.gl/layers';
 
 import { geoidToColor, VIEW_STATES } from '../vars';
@@ -9,7 +9,7 @@ import ACSContext from '../contexts/ACSContext';
 
 import SlideLayout from '../components/SlideLayout';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const questionsContent = [
   {
@@ -69,7 +69,7 @@ function QuestionsSlide({ updateMapState, isSlideSelected }) {
         }
         return (
           <SlideLayout>
-            <Row gutter={16}>
+            <Row>
               <Col span={8} offset={16}>
                 <Space direction="vertical">
                     <Card title="Research Questions" bordered={false}>

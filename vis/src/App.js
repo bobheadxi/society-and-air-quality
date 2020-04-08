@@ -12,7 +12,9 @@ import SingleLoader from './contexts/SingleLoader';
 // slideshow components
 import Intro from './slides/Intro';
 import Questions from './slides/Questions';
-import MethodologyData from './slides/methodology/Data';
+import MethodologyDataACS from './slides/methodology/DataACS';
+import MethodologyDataACSExplore from './slides/methodology/DataACSExplore';
+import MethodologyDataEPA from './slides/methodology/DataEPA';
 import MethodologyProcessing from './slides/methodology/Processing';
 import MethodologyAnalysis from './slides/methodology/Analysis';
 import End from './slides/End';
@@ -29,10 +31,14 @@ const mapStyles = {
   DARK: 'mapbox://styles/bobhead/ck8pf7npv0cda1iobxo3txanr',
 };
 
+const mapMoveInterpolator = new LinearInterpolator(['bearing']);
+
 const slides = [
   Intro,
   Questions,
-  MethodologyData,
+  MethodologyDataACS,
+  MethodologyDataACSExplore,
+  MethodologyDataEPA,
   MethodologyProcessing,
   MethodologyAnalysis,
   End,
@@ -45,7 +51,11 @@ function App() {
   const [mapState, setMapState] = useState({
     prevUpdateID: -1,
 
-    viewState: VIEW_STATES.INITAL,
+    viewState: {
+      ...VIEW_STATES.INITAL,
+      transitionDuration: 1000,
+      transitionInterpolator: mapMoveInterpolator,
+    },
     layers: [],
 
     mapStyle: 'DARK',
@@ -58,26 +68,30 @@ function App() {
     slideID={id}
     isSlideSelected={id === slideID}
     updateMapState={(s, updateID) => {
-      const stateUpdateID = (updateID | id);
+      const stateUpdateID = updateID || id;
+      // TODO making mapState a dependency of carousel causes infinite loops.
       if (stateUpdateID !== mapState.prevUpdateID) {
         setMapState({
           prevUpdateID: stateUpdateID,
-          layers: s.layers,
-          viewState: {
+          // recycle prev config if possible
+          layers: s.layers || mapState.layers, 
+          viewState: s.viewState ? {
             ...mapState.viewState,
             ...s.viewState,
             // why won't this work :(
             transitionDuration: 1000,
-            transitionInterpolator: new LinearInterpolator(['bearing']),
-          },
+            transitionInterpolator: mapMoveInterpolator,
+          } : mapState.viewState,
         });
+      } else {
+        console.log(`discarding map update ${stateUpdateID}`);
       }
     }}
   />)
 
   return (
-    <Layout style={{minHeight:"100vh"}}>
-      <Layout.Content>
+    <Layout style={{ height:"100vh"}}>
+      <Layout.Content style={{ height:"100%" }}>
         <DeckGL
           viewState={mapState.viewState}
           layers={mapState.layers}>
@@ -90,15 +104,15 @@ function App() {
         </DeckGL>
 
         <SingleLoader context={ACSContext}>
-            <SingleLoader context={EPAContext}>
-              <Carousel
-                ref={ref => { slider.current = ref; }}
-                style={{minHeight:"100%"}}
-                dotPosition="top"
-                beforeChange={(_, to) => { setSlide(to); }}
-                children={carouselNodes} />
-            </SingleLoader>
+          <SingleLoader context={EPAContext}>
+            <Carousel
+              ref={ref => { slider.current = ref; }}
+              style={{ height: "100%" }}
+              dotPosition="top"
+              beforeChange={(_, to) => { setSlide(to); }}
+              children={carouselNodes} />
           </SingleLoader>
+        </SingleLoader>
       </Layout.Content>
 
       <Layout.Footer>

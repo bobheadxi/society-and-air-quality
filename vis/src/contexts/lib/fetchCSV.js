@@ -26,7 +26,6 @@ export default async function(url, opts = {
         if (res.errors.length > 0) {
           return reject(res.errors[0]);
         }
-        console.log(res);
         resolve(res.data);
       },
     });
