@@ -13,8 +13,8 @@ const { Text, Title } = Typography;
 function Slide({ slideID, updateMapState, isSlideSelected }) {
   const [visState, setVisState] = useState({
     year: 0,
-    feature: 'total_pop',
-    geoid: REGIONS.SF.geoid,
+    feature: ACS_FEATURES.POV,
+    geoid: REGIONS.NY.geoid,
   });
 
   return (
@@ -44,7 +44,10 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                 wireframe: true,
               }),
             ]
-          }, `${slideID}-${visState.year}-${visState.feature}-${visState.geoid}`);
+          },
+          // updateID forces update but also causes infinite loop
+          // `${slideID}-${visState.year}-${visState.feature}-${visState.geoid}`
+          );
         }
 
         const region = acs.regions[visState.year].features.find((v) => v.properties.geoid === visState.geoid);
@@ -66,7 +69,7 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                     <Title level={4}>Region</Title>
                     <Select
                       labelInValue
-                      defaultValue={{ key: REGIONS.SF.geoid }}
+                      defaultValue={{ key: REGIONS.NY.geoid }}
                       style={{ width: 400 }}
                       onChange={(v) => setVisState({ ...visState, geoid: v.key })}
                     >
@@ -99,7 +102,7 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                     <Title level={3}>{regionName}</Title>
                     <Text strong>{`GeoID ${visState.geoid} | Feature ${visState.feature}`}</Text>
                     <br />
-                    <div style={{ height: 200, width: 400 }}>
+                    <div style={{ height: 300, width: 500 }}>
                       <ResponsiveLine
                         data={[{
                           id: `ts-${visState.geoid}`,
