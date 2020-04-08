@@ -13,9 +13,9 @@ import SingleLoader from './contexts/SingleLoader';
 import Intro from './slides/Intro';
 import Questions from './slides/Questions';
 import MethodologyDataACS from './slides/methodology/DataACS';
-import MethodologyDataACSExplore from './slides/methodology/DataACSExplore';
+import MethodologyDataACSExplorer from './slides/methodology/DataACSExplorer';
 import MethodologyDataEPA from './slides/methodology/DataEPA';
-import MethodologyProcessing from './slides/methodology/Processing';
+import MethodologyDataEPAExplorer from './slides/methodology/DataEPAExplorer';
 import MethodologyAnalysis from './slides/methodology/Analysis';
 import End from './slides/End';
 
@@ -37,9 +37,9 @@ const slides = [
   Intro,
   Questions,
   MethodologyDataACS,
-  MethodologyDataACSExplore,
+  MethodologyDataACSExplorer,
   MethodologyDataEPA,
-  MethodologyProcessing,
+  MethodologyDataEPAExplorer,
   MethodologyAnalysis,
   End,
 ];

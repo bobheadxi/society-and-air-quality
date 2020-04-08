@@ -30,7 +30,11 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                 id: `data-acs-layer-${visState.year}-${visState.feature}-${visState.region}`,
                 data: regions[visState.year],
                 pointRadiusMinPixels: 3,
-                getFillColor: (d) => geoidToColor(d.properties.geoid),
+                getFillColor: (d) => {
+                  const { properties: { geoid } } = d;
+                  if (geoid === visState.geoid) return [255,255,0];
+                  return geoidToColor(geoid)
+                },
                 getLineColor: [255, 255, 255],
                 getElevation: (d) => {
                   const { properties: { geoid } } = d;
@@ -53,11 +57,14 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
         const region = acs.regions[visState.year].features.find((v) => v.properties.geoid === visState.geoid);
         const { properties: { name: regionName } } = region;
 
-        const chartData = timeseriesFlat
-          .map((v, i) => ({
-            x: YEARS[i],
-            y: v[`${visState.geoid}.acs.${visState.feature}`],
-          }));
+        const chartData = [{
+          id: `ts-${visState.geoid}`,
+          data:  timeseriesFlat
+            .map((v, i) => ({
+              x: YEARS[i],
+              y: parseFloat(v[`${visState.geoid}.acs.${visState.feature}`]),
+            })),
+        }];
 
         return (
           <SlideLayout>
@@ -66,6 +73,7 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                 <Space direction="vertical">
                   <Card title="Data: The American Community Survey (ACS)" bordered={false}>
 
+                    <p>
                     <Title level={4}>Region</Title>
                     <Select
                       labelInValue
@@ -77,11 +85,13 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                       <Select.Option value={REGIONS.NY.geoid}>{REGIONS.NY.name}</Select.Option>
                       <Select.Option value={REGIONS.AU.geoid}>{REGIONS.AU.name}</Select.Option>
                     </Select>
+                    </p>
 
+                    <p>
                     <Title level={4}>Feature</Title>
                     <Select
                       labelInValue
-                      defaultValue={{ key: REGIONS.SF.geoid }}
+                      defaultValue={{ key: ACS_FEATURES.POV }}
                       style={{ width: 400 }}
                       onChange={(v) => setVisState({ ...visState, feature: v.key})}
                     >
@@ -90,6 +100,7 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                       <Select.Option value={ACS_FEATURES.POV}>{ACS_FEATURES.POV}</Select.Option>
                       <Select.Option value={ACS_FEATURES.TRANSIT}>{ACS_FEATURES.TRANSIT}</Select.Option>
                     </Select>
+                    </p>
 
                     {/* TODO Causes infinite state update loop with current architecture. Need to redesign.                   
                     <Title level={4}>Year</Title>
@@ -104,10 +115,7 @@ function Slide({ slideID, updateMapState, isSlideSelected }) {
                     <br />
                     <div style={{ height: 300, width: 500 }}>
                       <ResponsiveLine
-                        data={[{
-                          id: `ts-${visState.geoid}`,
-                          data: chartData,
-                        }]}
+                        data={chartData}
                         xScale={{ type: 'point' }}
                         yScale={{ type: 'linear' }}
 

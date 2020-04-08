@@ -43,6 +43,10 @@ export const ACS_FEATURES = {
     POV: 'poverty',
     TRANSIT: 'commuters_by_public_transportation',
 };
+export const EPA_FEATURES = {
+    PM: { code: '88502', name: 'Acceptable PM2.5 AQI & Speciation Mass' },
+    TEMP: { code: '68105', name: 'Average Ambient Temperature' },
+};
 
 export function geoidToColor(geoid) {
     const str = `${geoid}`; // 5-char string
