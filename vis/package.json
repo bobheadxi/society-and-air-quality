@@ -2,7 +2,7 @@
   "name": "vis",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bobheadxi.dev/eosc410-project",
+  "homepage": "https://bobheadxi.dev/society-and-air-quality",
   "dependencies": {
     "@ant-design/icons": "^4.0.5",
     "@nivo/bar": "^0.61.1",

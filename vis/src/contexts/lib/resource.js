@@ -1,7 +1,7 @@
 import { DEVELOPMENT } from '../../vars';
 
 // see package.json "homepage"
-const homepage = 'https://bobheadxi.dev/eosc410-project';
+const homepage = 'https://bobheadxi.dev/society-and-air-quality';
 
 /**
  * TODO figure out what to do about this
