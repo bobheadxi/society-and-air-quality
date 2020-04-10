@@ -4,12 +4,6 @@
 .ant-carousel .slick-dots li button {
     background: gray !important;
 }
-.ant-carousel {
-    height: 100%;
-}
-.slick-list {
-    height: 100%;
-}
-.slick-track {
-    height: 100%;
+.slick-dots-top {
+    max-height: 12px;
 }

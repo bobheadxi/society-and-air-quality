@@ -115,7 +115,7 @@ function App() {
                     return (
                       <Carousel
                         ref={ref => { slider.current = ref; }}
-                        dotPosition="bottom"
+                        dotPosition="top"
                         beforeChange={(_, to) => { setSlide(to); }}
                         children={slides.map((Slide, id) => <Slide
                           acs={acs}
