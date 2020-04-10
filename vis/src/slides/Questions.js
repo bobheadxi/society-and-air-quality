@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Typography, Timeline, Space } from 'antd';
 import { FilterTwoTone, FundTwoTone, QuestionCircleFilled } from '@ant-design/icons';
-import { GeoJsonLayer } from '@deck.gl/layers';
 
-import { geoidToColor, VIEW_STATES } from '../vars';
-
-import ACSContext from '../contexts/ACSContext';
+import { VIEW_STATES } from '../vars';
 
 import SlideLayout from '../components/SlideLayout';
+import { layerACSRegions, elevateByPopulation } from '../components/mapLayers';
 
 const { Text } = Typography;
 
@@ -38,51 +36,32 @@ const questions = (
   </Timeline>
 )
 
-function QuestionsSlide({ updateMapState, isSlideSelected }) {
+function QuestionsSlide({ acs, updateMapState, isSlideSelected }) {
+  useEffect(() => {
+    if (acs.loading || acs.err || !isSlideSelected) return;
+    updateMapState({
+      viewState: VIEW_STATES.US_LEFT,
+      layers: [
+        layerACSRegions(acs.regions, {
+          elevate: elevateByPopulation(acs.timeseriesFlat),
+        }),
+      ],
+    });
+  }, [acs, isSlideSelected, updateMapState]);
+
   return (
-    <ACSContext.Consumer>
-      {(acs) => {
-        if (!acs.loading && !acs.err && isSlideSelected) {
-          const { timeseriesFlat, regions } = acs;
-          updateMapState({
-            viewState: VIEW_STATES.US_LEFT,
-            layers: [
-              new GeoJsonLayer({
-                id: 'questions-acs-layer',
-                data: regions[regions.length-1],
-                pointRadiusMinPixels: 3,
-                getFillColor: (d) => geoidToColor(d.properties.geoid),
-                getLineColor: [255, 255, 255],
-                getElevation: (d) => {
-                  const { properties: { geoid } } = d;
-                  const pop = timeseriesFlat[timeseriesFlat.length-1][`${geoid}.acs.total_pop`] || 0;
-                  return Math.sqrt(pop) * 100;
-                },
-                opacity: 0.8,
-                stroked: false,
-                filled: true,
-                extruded: true,
-                wireframe: true,
-              }),
-            ]
-          });
-        }
-        return (
-          <SlideLayout>
-            <Row>
-              <Col span={8} offset={16}>
-                <Space direction="vertical">
-                    <Card title="Research Questions" bordered={false}>
-                    {questions}
-                    </Card>
-                </Space>
-              </Col>
-            </Row>
-          </SlideLayout>
-        )
-      }}
-    </ACSContext.Consumer>
-  );
+    <SlideLayout>
+      <Row>
+        <Col span={8} offset={16}>
+          <Space direction="vertical">
+              <Card title="Research Questions" bordered={false}>
+              {questions}
+              </Card>
+          </Space>
+        </Col>
+      </Row>
+    </SlideLayout>
+  )
 }
 
 QuestionsSlide.footerText = 'Simplified ACS CBSA regional boundaries, with heights representing total population'

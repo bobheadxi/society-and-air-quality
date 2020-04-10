@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { Carousel, Layout, Button, Row, Col, Typography } from 'antd';
+import React, { useRef, useState, useCallback } from 'react';
+import { Carousel, Layout, Button, Row, Col, Typography, notification } from 'antd';
 import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 
 import './App.css';
@@ -31,7 +31,10 @@ const mapStyles = {
   DARK: 'mapbox://styles/bobhead/ck8pf7npv0cda1iobxo3txanr',
 };
 
-const mapMoveInterpolator = new LinearInterpolator(['bearing']);
+const viewStateInterpolate = {
+  transitionDuration: 3000,
+  transitionInterpolator: new LinearInterpolator(),
+}
 
 const slides = [
   Intro,
@@ -49,45 +52,23 @@ const { Text } = Typography;
 function App() {
   // map state
   const [mapState, setMapState] = useState({
-    prevUpdateID: -1,
-
-    viewState: {
-      ...VIEW_STATES.INITAL,
-      transitionDuration: 1000,
-      transitionInterpolator: mapMoveInterpolator,
-    },
+    viewState: { ...VIEW_STATES.INITAL },
     layers: [],
-
-    mapStyle: 'DARK',
   });
+  const updateMapState = useCallback(
+    (s) => {
+      setMapState({
+        layers: s.layers,
+        viewState: { ...viewStateInterpolate, ...s.viewState }
+      });
+    },
+    [],
+  );
+  console.log(mapState.viewState)
 
   // slides
   const [slideID, setSlide] = useState(0);
   const slider = useRef();
-  const carouselNodes = slides.map((S, id) => <S
-    slideID={id}
-    isSlideSelected={id === slideID}
-    updateMapState={(s, updateID) => {
-      const stateUpdateID = updateID || id;
-      // TODO making mapState a dependency of carousel causes infinite loops.
-      if (stateUpdateID !== mapState.prevUpdateID) {
-        setMapState({
-          prevUpdateID: stateUpdateID,
-          // recycle prev config if possible
-          layers: s.layers || mapState.layers, 
-          viewState: s.viewState ? {
-            ...mapState.viewState,
-            ...s.viewState,
-            // why won't this work :(
-            transitionDuration: 1000,
-            transitionInterpolator: mapMoveInterpolator,
-          } : mapState.viewState,
-        });
-      } else {
-        console.log(`discarding map update ${stateUpdateID}`);
-      }
-    }}
-  />)
 
   return (
     <Layout style={{ height:"100vh"}}>
@@ -105,12 +86,49 @@ function App() {
 
         <SingleLoader context={ACSContext}>
           <SingleLoader context={EPAContext}>
-            <Carousel
-              ref={ref => { slider.current = ref; }}
-              style={{ height: "100%" }}
-              dotPosition="top"
-              beforeChange={(_, to) => { setSlide(to); }}
-              children={carouselNodes} />
+            <ACSContext.Consumer>
+              {(acs) => (
+                <EPAContext.Consumer>
+                  {(epa) => {
+                    if (acs.loading || epa.loading) {
+                      notification.info({ key: 'loading-message', message: 'Loading data...' });
+                    } else {
+                      if (acs.err) {
+                        notification.error({
+                          key: 'acs-err',
+                          message: 'An error occured when loading ACS data :(',
+                          description: acs.err.message,
+                        });
+                      }
+                      if (epa.err) {
+                        notification.error({
+                          key: 'epa-err',
+                          message: 'An error occured when loading EPA data :(',
+                          description: epa.err.message,
+                        });
+                      }
+                      if (!acs.err && !epa.err) {
+                        notification.close('loading-message');
+                      }
+                    }
+
+                    return (
+                      <Carousel
+                        ref={ref => { slider.current = ref; }}
+                        dotPosition="bottom"
+                        beforeChange={(_, to) => { setSlide(to); }}
+                        children={slides.map((Slide, id) => <Slide
+                          acs={acs}
+                          epa={epa}
+                          slideID={id}
+                          isSlideSelected={id === slideID}
+                          updateMapState={updateMapState}
+                        />)} />
+                    )
+                  }}
+                </EPAContext.Consumer>
+              )}
+            </ACSContext.Consumer>
           </SingleLoader>
         </SingleLoader>
       </Layout.Content>

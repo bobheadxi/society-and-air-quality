@@ -1,18 +1,16 @@
-import React from 'react';
-import { Row, Col, Typography, Avatar, Space, Alert } from 'antd';
+import React, { useEffect } from 'react';
+import { Typography, Avatar, Space } from 'antd';
 import { ExperimentTwoTone } from '@ant-design/icons';
-import { GeoJsonLayer } from '@deck.gl/layers';
 
-import { geoidToColor, VIEW_STATES } from '../vars';
-import EPAContext from '../contexts/EPAContext';
-import ACSContext from '../contexts/ACSContext';
+import { VIEW_STATES } from '../vars';
 
 import SlideLayout from '../components/SlideLayout';
+import { layerEPAStations } from '../components/mapLayers';
 
 const { Text, Title } = Typography;
 
 const main = (
-  <Space direction="vertical" size="large" style={{ padding: '48px' }}>
+  <Space direction="vertical" size="large" style={{ padding: '48px', marginTop: '64px' }}>
     <Avatar size="large" icon={<ExperimentTwoTone />} /> 
     <Typography>
       <Title>Society and Air Quality</Title>
@@ -21,60 +19,19 @@ const main = (
   </Space>
 )
 
-function IntroSlide({ updateMapState, isSlideSelected }) {
+function IntroSlide({ epa, updateMapState, isSlideSelected }) {
+  useEffect(() => {
+    if (epa.loading || epa.err || !isSlideSelected) return;
+    updateMapState({
+      viewState: VIEW_STATES.INITAL,
+      layers: [layerEPAStations(epa.stations)],
+    });
+  }, [isSlideSelected, epa, updateMapState]);
+
   return (
-    <EPAContext.Consumer>
-      {(epa) => {
-        // wait for ACS data - since this is the intro slide, we want to make sure *all* data is
-        // available
-        return (
-          <ACSContext.Consumer>
-            {(acs) => {
-              const isLoading = acs.loading || epa.loading
-              const isDataLoaded = !isLoading && !acs.err && !epa.err;
-
-              if (isDataLoaded && isSlideSelected) {
-                updateMapState({
-                  viewState: VIEW_STATES.INITAL,
-                  layers: [
-                    new GeoJsonLayer({
-                      id: 'intro-epa-layer',
-                      data: epa.stations[epa.stations.length-1],
-                      pointRadiusMinPixels: 3,
-                      getFillColor: (d) => {
-                        const { properties: { acs_geoid: geoid } } = d;
-                        return geoidToColor(geoid);
-                      },
-                    }),
-                  ],
-                });
-              }
-
-              return (
-                <SlideLayout>
-                  <Row>
-                    <Col span={4} offset={20}>
-                      <Space direction="vertical">
-                        {isLoading ? <Alert message="Loading data..." type="info" /> : undefined}
-                        {isDataLoaded ? <Alert message={'Presentation data is ready!'} type="success" showIcon /> : undefined}
-
-                        {(!isLoading && acs.err)
-                          ? <Alert message="Error occured when loading ACS data" description={acs.err.message} type="error" showIcon /> 
-                          : undefined}
-                        {(!isLoading && epa.err)
-                          ? <Alert message="Error occured when loading EPA data" description={epa.err.message} type="error" showIcon />
-                          : undefined}
-                      </Space>
-                    </Col>
-                  </Row>
-                  {main}
-                </SlideLayout>
-              )
-            }}
-          </ACSContext.Consumer>
-        )
-      }}
-    </EPAContext.Consumer>
+    <SlideLayout>
+      {main}
+    </SlideLayout>
   );
 }
 

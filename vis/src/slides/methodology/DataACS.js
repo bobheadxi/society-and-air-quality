@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Avatar, List } from 'antd';
 import { TeamOutlined, RocketOutlined, PoundOutlined } from '@ant-design/icons';
 
 import { VIEW_STATES } from '../../vars';
 import SlideLayout from '../../components/SlideLayout';
+
+import { layerACSRegions, elevateByPopulation } from '../../components/mapLayers';
 
 const focusFeaturesContent = [
   {
@@ -33,14 +35,22 @@ const focusFeatures = (
   )} />
 )
 
-function Slide({ updateMapState, isSlideSelected }) {
-  if (isSlideSelected) {
+function Slide({ acs, updateMapState, isSlideSelected }) {
+  useEffect(() => {
+    if (acs.loading ||!isSlideSelected) return;
     const viewState = { ...VIEW_STATES.US_RIGHT };
     viewState.zoom -= 0.25;
     viewState.latitude -= 16;
     viewState.longitude -= 20;
-    updateMapState({ viewState });
-  }
+    updateMapState({
+      viewState,
+      layers: [
+        layerACSRegions(acs.regions, {
+          elevate: elevateByPopulation(acs.timeseriesFlat),
+        }),
+      ],
+    });
+  }, [isSlideSelected, acs, updateMapState]);
 
   return (
     <SlideLayout footer={(

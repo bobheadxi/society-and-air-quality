@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/society-and-air-quality/static/css/main.ceddb7cf.chunk.css",
-    "main.js": "/society-and-air-quality/static/js/main.6c8f6722.chunk.js",
-    "main.js.map": "/society-and-air-quality/static/js/main.6c8f6722.chunk.js.map",
+    "main.js": "/society-and-air-quality/static/js/main.8f241473.chunk.js",
+    "main.js.map": "/society-and-air-quality/static/js/main.8f241473.chunk.js.map",
     "runtime-main.js": "/society-and-air-quality/static/js/runtime-main.fe263e8b.js",
     "runtime-main.js.map": "/society-and-air-quality/static/js/runtime-main.fe263e8b.js.map",
-    "static/css/2.bd7f0ffd.chunk.css": "/society-and-air-quality/static/css/2.bd7f0ffd.chunk.css",
-    "static/js/2.ca1fb68e.chunk.js": "/society-and-air-quality/static/js/2.ca1fb68e.chunk.js",
-    "static/js/2.ca1fb68e.chunk.js.map": "/society-and-air-quality/static/js/2.ca1fb68e.chunk.js.map",
+    "static/css/2.4b509899.chunk.css": "/society-and-air-quality/static/css/2.4b509899.chunk.css",
+    "static/js/2.a0beabee.chunk.js": "/society-and-air-quality/static/js/2.a0beabee.chunk.js",
+    "static/js/2.a0beabee.chunk.js.map": "/society-and-air-quality/static/js/2.a0beabee.chunk.js.map",
     "index.html": "/society-and-air-quality/index.html",
-    "precache-manifest.89fdb1d59dbc3d275df39ae68ce7572b.js": "/society-and-air-quality/precache-manifest.89fdb1d59dbc3d275df39ae68ce7572b.js",
+    "precache-manifest.222c27b98c0e2fee8f650256879c85a8.js": "/society-and-air-quality/precache-manifest.222c27b98c0e2fee8f650256879c85a8.js",
     "service-worker.js": "/society-and-air-quality/service-worker.js",
-    "static/css/2.bd7f0ffd.chunk.css.map": "/society-and-air-quality/static/css/2.bd7f0ffd.chunk.css.map",
+    "static/css/2.4b509899.chunk.css.map": "/society-and-air-quality/static/css/2.4b509899.chunk.css.map",
     "static/css/main.ceddb7cf.chunk.css.map": "/society-and-air-quality/static/css/main.ceddb7cf.chunk.css.map",
-    "static/js/2.ca1fb68e.chunk.js.LICENSE.txt": "/society-and-air-quality/static/js/2.ca1fb68e.chunk.js.LICENSE.txt"
+    "static/js/2.a0beabee.chunk.js.LICENSE.txt": "/society-and-air-quality/static/js/2.a0beabee.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.fe263e8b.js",
-    "static/css/2.bd7f0ffd.chunk.css",
-    "static/js/2.ca1fb68e.chunk.js",
+    "static/css/2.4b509899.chunk.css",
+    "static/js/2.a0beabee.chunk.js",
     "static/css/main.ceddb7cf.chunk.css",
-    "static/js/main.6c8f6722.chunk.js"
+    "static/js/main.8f241473.chunk.js"
   ]
 }
